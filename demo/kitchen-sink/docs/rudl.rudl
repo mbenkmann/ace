@@ -1,19 +1,77 @@
-#!rudl
+# Rudl (rhymes with "noodle") is a programming language developed for the purpose
+# of implementing board and card games, in particular customizable card games.
+# Rudl is an imperative language based on tables.
 
-import string, sys
+# Declares a table named "score" with 2 columns of type "int".
+# ".keep(1)" is a directive that specifies that this table only keeps
+# the last 1 value put into it. Older values are auto-removed.
+score .keep(10) .unique(Player, Points) (int Player, int Points)
+hiscore .reuse(score,a,A) (int Player, int Points)
+print .extern (any)
+foo .first ()
+foo .override ()
+  .daisy foo
+  .call foo
+  .first foo
+  ! .random foo
+  .select ! foo "This\nis\r\a\tstring" "" X
+  .shuffle foo(foo):
+      .context(add,del) foo foo, .context(del,query) foo . X . [1+1], foo
+.type mytype int
+.polymorph pval (mytype)
+   pval [3+(1*2/10) < 5 > 6 <= 10 >= 11 = 12 == 13 ! X % Y && foo || not bar and 1 or 2]
 
-# If no arguments were   given, prin  t a helpful message
-if len(sys.argv)==1:
-    print '''Usage:
-celsius temp1 temp2 ...'''
-    sys.exit(0)
+# 1.  Directives used with table declarations
+# 1.1 with arguments
+#       .unique(Column,...)  .keep(number)  .reuse(tname, {toKEN,replacEMENT,...})
+# 1.2 without arguments
+#       .extern  .first  .override
+# 2. Directives used with queries or actions
+# 2.1 with arguments
+#       .context(add|del|query,...)  .max(Unbound{,...})  .tuple(T)
+# 2.2 without arguments
+#       .first  .random  .select  .shuffle  .daisy  .call 
+# 3. Directives used at the top level
+# 3.1 with arguments
+# 3.2 without arguments
+#       .polymorph
+#        .type type {supertype}
 
-# Loop over the arguments
-for i in sys.argv[1:]:
-    try:
-        fahrenheit=float(string.atoi(i))
-    except string.atoi_error:
-        print repr(i), "not a numeric value"
-    else:
-        celsius=(fahrenheit-32)*5.0/9.0
-        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))
+# Table declaration
+# tablename {.directive...} ({type {Column},...})
+# NOTE: Inside (...) commas "," are permitted but optional
+
+# Polymorph declaration
+# .polymorph pname (type) <hook code>
+
+# Operators (inside [...])
+#  (, )      
+# ! (logical NOT), -, + 
+# *, / (rounded division), % (modulo)
+# +, -                               
+# =, !=, <, >, <=, >=       
+# && (logical AND), || (logical OR)
+#
+# ==, not, and, or  (aliases for other operators)
+
+# Action
+# {.directive...} tname {{Var}{const}{ [ <expression> ] }{ . }}...
+# {.directive...} tname ( {{Var}{const}{ [ <expression> ] }{ . }}, ... )
+# {.directive...} ! {.directive...} tname {{Var}{const}{ [ <expression> ] }{ . }}...
+# {.directive...} ! {.directive...} tname ( {{Var}{const}{ [ <expression> ] }{ . }}, ... )
+# NOTE: Inside (...) commas "," are permitted but optional
+
+# Query
+# <Action> : ...
+# {!} {.directive...} [<expression>] : ...
+# <Query>,<Query>,...: ...
+# NOTE: After a comma a line break is ignored and the indentation
+# of the following line has no effect.
+   
+
+# Strings
+# Strings are enclosed in double-quotes and support the escape-sequences
+# \", \n, \r, \t. The empty constant is written as "".
+
+foo() bar,
+bla()   # This is NOT a table declaration because of the comma on the previous line
